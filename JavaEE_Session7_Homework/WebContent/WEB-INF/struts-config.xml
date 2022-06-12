@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+    <form-beans>
+        <form-bean name="GoodsReplenishmentForm" type="com.training.vo.GoodsReplenishmentForm"/>
+        <form-bean name="GoodsOrderForm" type="com.training.formbean.GoodsOrderForm"/>
+    </form-beans>
+    <action-mappings>    
+        <action path="/BackendServlet" type="com.training.servlet.BackendServlet" 
+        		parameter="action" name="GoodsReplenishmentForm">
+        		
+            <forward name="GoodsListView" path="/WEB-INF/view/VM_Backend_GoodsList.jsp" />
+            <!-- 
+            	由於頁面移至了WEB-INF底下須使用forward(轉向)的方式才能訪問，但此為交易的動作為避免交易因重整而重覆執行，
+            	故將訪問頁面的行為獨立出來並透過redirect(重導)的方式連結 
+            -->
+			<!-- 商品維護 -->
+            <forward name="GoodsReplenishment" path="/BackendServlet.do?action=updateGoodsView" redirect="true"/>
+            <forward name="GoodsReplenishmentView" path="/WEB-INF/view/VM_Backend_GoodsReplenishment.jsp" />
+            <!-- 新增商品 -->
+            <forward name="GoodsCreate" path="/BackendServlet.do?action=addGoodsView" redirect="true"/>
+            <forward name="GoodsCreateView" path="/WEB-INF/view/VM_Backend_GoodsCreate.jsp" />
+            <!-- 銷售報表 -->
+            <forward name="GoodsSaleReportView" path="/WEB-INF/view/VM_Backend_GoodsSaleReport.jsp" />
+            <forward name="GoodsSaleReport" path="/WEB-INF/view/VM_Backend_GoodsSaleReport.jsp" />
+            
+            
+            <!-- 此為刪除功能所以 redirect 至 queryGoods 方法 -->
+            <forward name="DeleteGoodsRedirect" path="/BackendServlet.do?action=queryGoods" redirect="true"/>
+        </action>
+        
+        <action path="/LoginAction" type="com.training.servlet.LoginAction" parameter="action">
+            <!-- 登入成功進入操作首頁 -->
+            <forward name="success" path="/FrontendServlet.do?action=searchGoods&amp;pageNo=1" redirect="true"/>
+            <!-- 登入失敗重回登入頁面 -->
+            <forward name="fail" path="/login.jsp" />
+        </action>
+           
+        <action path="/FrontendServlet" type="com.training.servlet.FrontendServlet" 
+        		parameter="action" name="GoodsOrderForm">
+            <forward name="VendingMachine" path="/FrontendServlet.do?action=searchGoods" redirect="true"/>
+            <forward name="VendingMachineView" path="/WEB-INF/view/VendingMachine.jsp" />
+        </action>
+        
+        
+    </action-mappings>
+</struts-config>
